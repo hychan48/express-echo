@@ -64,6 +64,7 @@ this.timeout(500);//500ms
  * @param data will automatically be changed
  */
 import fs from 'node:fs';
+import {stringify} from "node:querystring"
 function writeToFile(fileName,data,space=2){
   const sFileName = /\./.test(fileName) ? fileName : fileName + '.json';
   const filePath = `dev/pbs/test/${sFileName}`
@@ -76,15 +77,27 @@ describe('echo.test.mjs', function(){
   it('get localhost', async function(){
     //this.timeout(500);
     let out;
-    const expected = "";
+    const param = "hi";
+    const expected = param;//i can think of some queries or param... let's just do param for now
+    let url;
+    // url = "http://localhost:3000/hi"
+    // url = "http://localhost:3000"
+
+    // url = "http://localhost:3000?param=hi"
+    url = "http://localhost:3000?" + stringify({param})
     try{
-      const oData = await axios.get("http://localhost:3000");
+      const oData = await axios.get(url);
       const {data} = oData;
       out = data;
       console.log(data);
 
     }catch (e) {
-      console.error(e);
+      if(e.code === 'ERR_BAD_REQUEST'){
+        console.error('404 ERR_BAD_REQUEST')
+      }else {
+        console.error(e);
+      }
+
     }finally {
       assert.strictEqual(out,expected);
     }
