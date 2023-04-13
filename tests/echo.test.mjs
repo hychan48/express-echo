@@ -85,6 +85,7 @@ describe('echo.test.mjs', function(){
 
     // url = "http://localhost:3000?param=hi"
     url = "http://localhost:3000?" + stringify({param})
+    // http://localhost:3000?param=hi
     try{
       const oData = await axios.get(url);
       const {data} = oData;
